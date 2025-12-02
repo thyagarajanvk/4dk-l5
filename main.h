@@ -39,6 +39,7 @@ typedef struct _simulation_run_data_
   Server_Ptr link;
   long int blip_counter;
   long int arrival_count;
+  long int rejected_count;
   long int number_of_packets_processed;
   double accumulated_delay;
   unsigned random_seed;

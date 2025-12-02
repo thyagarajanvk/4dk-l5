@@ -57,6 +57,8 @@ main(void)
 
   unsigned RANDOM_SEEDS[] = {RANDOM_SEED_LIST, 0};
   unsigned random_seed;
+  double average_no_of_rejected_arrivals = 0;
+  double average_no_of_transmitted_arrivals = 0;
   int j=0;
 
   /* 
@@ -80,6 +82,7 @@ main(void)
     
     data.blip_counter = 0;
     data.arrival_count = 0;
+    data.rejected_count = 0;
     data.number_of_packets_processed = 0;
     data.accumulated_delay = 0.0;
     data.random_seed = random_seed;
@@ -104,11 +107,16 @@ main(void)
     schedule_packet_arrival_event(simulation_run, 
 				  simulation_run_get_time(simulation_run));
 
+
+    // schedule the last event (exactly at RUNLENGTH_TIME)
+    schedule_last_event(simulation_run, RUNLENGTH_TIME);
+
     /* 
      * Execute events until we are finished. 
      */
 
-    while(data.number_of_packets_processed < RUNLENGTH) {
+    
+    while(simulation_run_get_time(simulation_run) < RUNLENGTH_TIME) {
       simulation_run_execute_event(simulation_run);
     }
 
@@ -117,10 +125,23 @@ main(void)
      */
 
     output_results(simulation_run);
+
+    average_no_of_rejected_arrivals += get_no_of_rejected_arrivals(simulation_run);
+    fprintf(stdout, "Rejected arrival count = %.3f \n", average_no_of_rejected_arrivals);
+    average_no_of_transmitted_arrivals += get_no_of_transmitted_arrivals(simulation_run);
+    fprintf(stdout, "Transmitted arrival count = %.3f \n", average_no_of_transmitted_arrivals);
+    
+
     cleanup_memory(simulation_run);
   }
+  j--;
+  average_no_of_rejected_arrivals /= j;
+  average_no_of_transmitted_arrivals /= j;
 
-  getchar();   /* Pause before finishing. */
+  fprintf(stderr, "Average Rejected arrival count = %.3f \n", average_no_of_rejected_arrivals);
+  fprintf(stderr, "Average Transmitted arrival count = %.3f \n", average_no_of_transmitted_arrivals);
+
+  // getchar();   /* Pause before finishing. */
   return 0;
 }
 

@@ -30,6 +30,25 @@
 #include "packet_arrival.h"
 
 /******************************************************************************/
+long int
+schedule_last_event(Simulation_Run_Ptr simulation_run, double event_time)
+{
+  Event event;
+
+  event.description = "Simulation Last Event";
+  event.function = last_event;
+  event.attachment = (void *) NULL;
+
+  return simulation_run_schedule_event(simulation_run, event, event_time);
+}
+
+void
+last_event(Simulation_Run_Ptr simulation_run, void * ptr){
+  //does nothing, just there so that in simulation_run_execute_event, simulation_run_set_time sets the time to RUN_LENGTH time
+  // and hence the while loop condition in main.c would become false and the simulation would end
+}
+
+
 
 /*
  * This function will schedule a packet arrival at a time given by
@@ -79,11 +98,17 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
    * the buffer.
    */
 
-  if(server_state(data->link) == BUSY) {
-    fifoqueue_put(data->buffer, (void*) new_packet);
+  
+  if (data->buffer->size == B){
+    data->rejected_count++;
   } else {
-    start_transmission_on_link(simulation_run, new_packet, data->link);
+    if(server_state(data->link) == BUSY) {
+      fifoqueue_put(data->buffer, (void*) new_packet);
+    } else {
+      start_transmission_on_link(simulation_run, new_packet, data->link);
+    }
   }
+
 
   /* 
    * Schedule the next packet arrival. Independent, exponentially distributed

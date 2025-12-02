@@ -43,6 +43,12 @@ output_progress_msg_to_screen(Simulation_Run_Ptr);
 void
 output_results(Simulation_Run_Ptr);
 
+long
+get_no_of_rejected_arrivals(Simulation_Run_Ptr);
+
+long
+get_no_of_transmitted_arrivals(Simulation_Run_Ptr);
+
 /******************************************************************************/
 
 #endif /* output.h */

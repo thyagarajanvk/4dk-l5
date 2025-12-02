@@ -37,6 +37,12 @@
  */
 
 void
+last_event(Simulation_Run_Ptr, void*);
+
+long
+schedule_last_event(Simulation_Run_Ptr, double);
+
+void
 packet_arrival_event(Simulation_Run_Ptr, void*);
 
 long

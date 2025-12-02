@@ -45,14 +45,12 @@ output_progress_msg_to_screen(Simulation_Run_Ptr simulation_run)
 
   data->blip_counter++;
 
-  if((data->blip_counter >= BLIPRATE)
-     ||
-     (data->number_of_packets_processed >= RUNLENGTH)) {
+  if((data->blip_counter >= BLIPRATE)) {
 
     data->blip_counter = 0;
 
     percentage_done =
-      100 * (double) data->number_of_packets_processed/RUNLENGTH;
+      100 * (double) simulation_run_get_time(simulation_run)/RUNLENGTH_TIME;
 
     printf("%3.0f%% ", percentage_done);
 
@@ -80,6 +78,9 @@ output_results(Simulation_Run_Ptr simulation_run)
   printf("\n");
   printf("Random Seed = %d \n", data->random_seed);
   printf("Packet arrival count = %ld \n", data->arrival_count);
+  printf("Rejected arrival count = %ld \n", data->rejected_count);
+
+  printf("Current Time = %.3fs \n", (double) simulation_run_get_time(simulation_run));
 
   xmtted_fraction = (double) data->number_of_packets_processed /
     data->arrival_count;
@@ -94,6 +95,23 @@ output_results(Simulation_Run_Ptr simulation_run)
 
   printf("\n");
 }
+
+long int
+get_no_of_rejected_arrivals(Simulation_Run_Ptr simulation_run){
+  Simulation_Run_Data_Ptr data;
+  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  return data->rejected_count;
+}
+
+long int
+get_no_of_transmitted_arrivals(Simulation_Run_Ptr simulation_run){
+  Simulation_Run_Data_Ptr data;
+  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  return data->number_of_packets_processed;
+}
+
+
+
 
 
 
