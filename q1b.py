@@ -8,7 +8,7 @@ import os
 # Configuration
 # -----------------------------
 RERUN = True                       # True: sweep rates, compile/run; False: just plot from CSV
-ARRIVAL_RATES = range(10, 201, 10)  # From 10 to 200 inclusive
+LINK_BIT_RATES = range(20, 401, 20)  # From 100 to 2000 inclusive
 CSV_FILE = "q1b.csv"
 EXECUTABLE = "./run"
 SOURCE_WILDCARD = "*.c"
@@ -19,11 +19,11 @@ REJECTED_PATTERN = re.compile(r"Rejected arrival count\s*=\s*([\d\.]+)")
 TRANSMITTED_PATTERN = re.compile(r"Transmitted arrival count\s*=\s*([\d\.]+)")
 
 # -----------------------------
-# Function to compile program with PACKET_ARRIVAL_RATE
+# Function to compile program with LINK_BIT_RATE
 # -----------------------------
-def compile_program(arrival_rate):
-    cmd = f"gcc -O2 -Wall -DPACKET_ARRIVAL_RATE={arrival_rate} {SOURCE_WILDCARD} -o {EXECUTABLE} -lm"
-    print(f"Compiling with PACKET_ARRIVAL_RATE={arrival_rate}...")
+def compile_program(link_bit_rate):
+    cmd = f"gcc -O2 -Wall -DLINK_BIT_RATE={link_bit_rate} {SOURCE_WILDCARD} -o {EXECUTABLE} -lm"
+    print(f"Compiling with LINK_BIT_RATE={link_bit_rate}...")
     subprocess.run(cmd, shell=True, check=True)
 
 # -----------------------------
@@ -53,7 +53,7 @@ if RERUN:
     rejected_list = []
     transmitted_list = []
 
-    for rate in ARRIVAL_RATES:
+    for rate in LINK_BIT_RATES:
         compile_program(rate)
         rej, trans = run_and_parse()
         if rej is None or trans is None:
@@ -64,13 +64,13 @@ if RERUN:
     # Write CSV
     with open(CSV_FILE, "w", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["ArrivalRate", "RejectedRate", "TransmittedRate"])
-        for rate, rej, trans in zip(ARRIVAL_RATES, rejected_list, transmitted_list):
+        writer.writerow(["LinkBitRate", "RejectedRate", "TransmittedRate"])
+        for rate, rej, trans in zip(LINK_BIT_RATES, rejected_list, transmitted_list):
             writer.writerow([rate, rej, trans])
 
 else:
     # just read csv
-    ARRIVAL_RATES = []
+    LINK_BIT_RATES = []
     rejected_list = []
     transmitted_list = []
 
@@ -80,7 +80,7 @@ else:
     with open(CSV_FILE, "r") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            ARRIVAL_RATES.append(int(row["ArrivalRate"]))
+            LINK_BIT_RATES.append(int(row["LinkBitRate"]))
             rejected_list.append(float(row["RejectedRate"]))
             transmitted_list.append(float(row["TransmittedRate"]))
 
@@ -90,15 +90,15 @@ else:
 plt.figure(figsize=(10,5))
 
 plt.subplot(1,2,1)
-plt.plot(ARRIVAL_RATES, rejected_list, marker='o')
-plt.title("Rejected arrival rate vs Packet Arrival Rate")
-plt.xlabel("Packet Arrival Rate")
+plt.plot(LINK_BIT_RATES, rejected_list, marker='o')
+plt.title("Rejected arrival rate vs Link Bit Rate")
+plt.xlabel("Link Bit Rate")
 plt.ylabel("Rejected rate")
 
 plt.subplot(1,2,2)
-plt.plot(ARRIVAL_RATES, transmitted_list, marker='o', color='green')
-plt.title("Transmitted arrival rate vs Packet Arrival Rate")
-plt.xlabel("Packet Arrival Rate")
+plt.plot(LINK_BIT_RATES, transmitted_list, marker='o', color='green')
+plt.title("Transmitted arrival rate vs Link Bit Rate")
+plt.xlabel("Link Bit Rate")
 plt.ylabel("Transmitted rate")
 
 plt.tight_layout()
