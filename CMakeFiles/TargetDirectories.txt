@@ -1,0 +1,3 @@
+/home/vinith/dk4/lab5/coe4dk4_lab_2_2025/coe4dk4_lab_2_2025/CMakeFiles/run.dir
+/home/vinith/dk4/lab5/coe4dk4_lab_2_2025/coe4dk4_lab_2_2025/CMakeFiles/edit_cache.dir
+/home/vinith/dk4/lab5/coe4dk4_lab_2_2025/coe4dk4_lab_2_2025/CMakeFiles/rebuild_cache.dir
