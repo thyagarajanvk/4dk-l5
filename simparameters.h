@@ -28,14 +28,16 @@
 
 /******************************************************************************/
 
+#ifndef PACKET_ARRIVAL_RATE
 #define PACKET_ARRIVAL_RATE 100 /* packets per second */
+#endif
 
 // #define PACKET_LENGTH 1e3 /* bits */
 #ifndef LINK_BIT_RATE
 #define LINK_BIT_RATE 1000 /* packets per second */
 #endif
 // #define RUNLENGTH 10e6 /* packets */
-#define RUNLENGTH_TIME 100000
+#define RUNLENGTH_TIME 100
 
 #ifndef B
 #define B 3

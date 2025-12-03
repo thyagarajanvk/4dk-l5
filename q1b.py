@@ -12,7 +12,7 @@ LINK_BIT_RATES = range(20, 401, 20)  # From 100 to 2000 inclusive
 CSV_FILE = "q1b.csv"
 EXECUTABLE = "./run"
 SOURCE_WILDCARD = "*.c"
-RUN_LENGTH = 100000
+RUN_LENGTH = 100
 
 # Regex patterns to parse output
 REJECTED_PATTERN = re.compile(r"Rejected arrival count\s*=\s*([\d\.]+)")

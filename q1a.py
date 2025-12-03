@@ -7,8 +7,8 @@ import os
 # -----------------------------
 # Configuration
 # -----------------------------
-RERUN = False           # True: sweep B, compile/run; False: just plot from CSV
-B_values = range(1, 5) # Sweep B from 1 to 4 inclusive
+RERUN = True           # True: sweep B, compile/run; False: just plot from CSV
+B_values = range(1, 15) # Sweep B from 1 to 4 inclusive
 CSV_FILE = "q1a.csv"
 EXECUTABLE = "./run"
 SOURCE_WILDCARD = "*.c"
@@ -21,7 +21,7 @@ TRANSMITTED_PATTERN = re.compile(r"Transmitted arrival count\s*=\s*([\d\.]+)")
 # Function to compile with given B
 # -----------------------------
 def compile_program(B):
-    cmd = f"gcc -O2 -Wall -DB={B} {SOURCE_WILDCARD} -o {EXECUTABLE} -lm"
+    cmd = f"gcc -O2 -Wall -DB={B} -DPACKET_ARRIVAL_RATE=1000 {SOURCE_WILDCARD} -o {EXECUTABLE} -lm"
     print(f"Compiling with B={B}...")
     subprocess.run(cmd, shell=True, check=True)
 
