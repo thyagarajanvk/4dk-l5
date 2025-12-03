@@ -7,7 +7,7 @@ import os
 # -----------------------------
 # Configuration
 # -----------------------------
-RERUN = True                       # True: sweep rates, compile/run; False: just plot from CSV
+RERUN = False                       # True: sweep rates, compile/run; False: just plot from CSV
 LINK_BIT_RATES = range(20, 401, 20)  # From 100 to 2000 inclusive
 CSV_FILE = "q1b.csv"
 EXECUTABLE = "./run"
@@ -91,15 +91,15 @@ plt.figure(figsize=(10,5))
 
 plt.subplot(1,2,1)
 plt.plot(LINK_BIT_RATES, rejected_list, marker='o')
-plt.title("Rejected arrival rate vs Link Bit Rate")
-plt.xlabel("Link Bit Rate")
-plt.ylabel("Rejected rate")
+plt.title("Rejected packet rate vs R")
+plt.xlabel("R (packets/sec)")
+plt.ylabel("Rejected packet rate (packets/sec)")
 
 plt.subplot(1,2,2)
 plt.plot(LINK_BIT_RATES, transmitted_list, marker='o', color='green')
-plt.title("Transmitted arrival rate vs Link Bit Rate")
-plt.xlabel("Link Bit Rate")
-plt.ylabel("Transmitted rate")
+plt.title("Output/Processed Packet rate vs R")
+plt.xlabel("R (packets/sec)")
+plt.ylabel("Output/Processed Packet rate (packets/sec)")
 
 plt.tight_layout()
 plt.savefig("q1b.png")  # save figure instead of showing
