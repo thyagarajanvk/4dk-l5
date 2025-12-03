@@ -59,6 +59,10 @@ main(void)
   unsigned random_seed;
   double average_no_of_rejected_arrivals = 0;
   double average_no_of_transmitted_arrivals = 0;
+
+  double average_no_of_rejected_bits = 0;
+  double average_no_of_transmitted_bits = 0;
+
   int j=0;
 
   /* 
@@ -83,6 +87,8 @@ main(void)
     data.blip_counter = 0;
     data.arrival_count = 0;
     data.rejected_count = 0;
+    data.total_bits_processed = 0;
+    data.total_bits_rejected = 0;
     data.number_of_packets_processed = 0;
     data.accumulated_delay = 0.0;
     data.random_seed = random_seed;
@@ -118,6 +124,9 @@ main(void)
     
     while(simulation_run_get_time(simulation_run) < RUNLENGTH_TIME) {
       simulation_run_execute_event(simulation_run);
+      TRACE(printf("The size of the queue is: %d \n", fifoqueue_size(data.buffer)););
+      TRACE(printf("total_bits_processed: %ld \n", data.total_bits_processed););
+      TRACE(printf("total_bits_rejected: %ld \n", data.total_bits_rejected););      
     }
 
     /*
@@ -127,10 +136,15 @@ main(void)
     output_results(simulation_run);
 
     average_no_of_rejected_arrivals += get_no_of_rejected_arrivals(simulation_run);
-    fprintf(stdout, "Rejected arrival count = %.3f \n", average_no_of_rejected_arrivals);
+    // fprintf(stdout, "Rejected arrival count = %.3f \n", average_no_of_rejected_arrivals);
     average_no_of_transmitted_arrivals += get_no_of_transmitted_arrivals(simulation_run);
-    fprintf(stdout, "Transmitted arrival count = %.3f \n", average_no_of_transmitted_arrivals);
+    // fprintf(stdout, "Transmitted arrival count = %.3f \n", average_no_of_transmitted_arrivals);
     
+    average_no_of_rejected_bits += get_no_of_rejected_bits(simulation_run);
+    fprintf(stdout, "Average Rejected bit count = %.3f \n", (double) get_no_of_rejected_bits(simulation_run));
+    average_no_of_transmitted_bits += get_no_of_transmitted_bits(simulation_run);
+    fprintf(stdout, "Average Transmitted bit count = %.3f \n\n\n", (double) get_no_of_transmitted_bits(simulation_run));
+
 
     cleanup_memory(simulation_run);
   }
@@ -138,8 +152,15 @@ main(void)
   average_no_of_rejected_arrivals /= j;
   average_no_of_transmitted_arrivals /= j;
 
-  fprintf(stderr, "Average Rejected arrival count = %.3f \n", average_no_of_rejected_arrivals);
-  fprintf(stderr, "Average Transmitted arrival count = %.3f \n", average_no_of_transmitted_arrivals);
+  average_no_of_rejected_bits /= j;
+  average_no_of_transmitted_bits /= j;
+
+  // fprintf(stderr, "Average Rejected arrival count = %.3f \n", average_no_of_rejected_arrivals);
+  // fprintf(stderr, "Average Transmitted arrival count = %.3f \n", average_no_of_transmitted_arrivals);
+
+
+  fprintf(stderr, "Average Rejected bit count = %.3f \n", average_no_of_rejected_bits);
+  fprintf(stderr, "Average Transmitted bit count = %.3f \n", average_no_of_transmitted_bits);
 
   // getchar();   /* Pause before finishing. */
   return 0;

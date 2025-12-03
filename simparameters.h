@@ -31,20 +31,34 @@
 #define PACKET_ARRIVAL_RATE 100 /* packets per second */
 
 // #define PACKET_LENGTH 1e3 /* bits */
-#ifndef LINK_BIT_RATE
-#define LINK_BIT_RATE 1000 /* packets per second */
-#endif
+// #ifndef LINK_BIT_RATE
+// #define LINK_BIT_RATE 1000 /* packets per second */
+// #endif
 // #define RUNLENGTH 10e6 /* packets */
-#define RUNLENGTH_TIME 100000
+#define RUNLENGTH_TIME 100
 
 #ifndef B
-#define B 3
+#define B 10
 #endif
 
 /* Comma separated list of random seeds to run. */
 #define RANDOM_SEED_LIST 333333, 4444444, 55555555, 400383048
 
-#define PACKET_XMT_TIME ((double) 1/LINK_BIT_RATE)
+// #define PACKET_XMT_TIME ((double) 1/LINK_BIT_RATE)
+
+// number of bits you can transmit max in one tick
+#ifndef N
+#define N 10000
+#endif
+
+// not really the packet transmission time, it's instead the time between ticks
+#ifndef PACKET_XMT_TIME
+#define PACKET_XMT_TIME 0.1
+#endif
+
+#define LINK_BIT_RATE ((double) N/PACKET_XMT_TIME)
+
+
 #define BLIPRATE (RUNLENGTH_TIME/1000)
 
 /******************************************************************************/

@@ -81,6 +81,8 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
   data->number_of_packets_processed++;
   data->accumulated_delay += simulation_run_get_time(simulation_run) - 
     this_packet->arrive_time;
+  
+  data->total_bits_processed += this_packet->equivalent_bit_count;
 
   /* Output activity blip every so often. */
   output_progress_msg_to_screen(simulation_run);
@@ -93,8 +95,18 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
    * out and transmit it immediately.
   */
 
-  if(fifoqueue_size(data->buffer) > 0) {
-    next_packet = (Packet_Ptr) fifoqueue_get(data->buffer);
+  if(fifoqueue_size(data->buffer) > 0){
+ 
+    long int counter = N;
+    long int total_bits_to_be_xmt = 0;
+
+    next_packet = NULL;
+    while(fifoqueue_size(data->buffer) > 0 && ((Packet_Ptr) fifoqueue_see_front(data->buffer))->bit_length <= counter){
+      next_packet = (Packet_Ptr) fifoqueue_get(data->buffer);
+      total_bits_to_be_xmt += next_packet->bit_length;
+      counter -= next_packet->bit_length;
+    }
+    next_packet->equivalent_bit_count = total_bits_to_be_xmt;
     start_transmission_on_link(simulation_run, next_packet, link);
   }
 }

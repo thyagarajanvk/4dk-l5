@@ -93,7 +93,7 @@ output_results(Simulation_Run_Ptr simulation_run)
   printf("Mean Delay (msec) = %.2f \n",
 	 1e3*data->accumulated_delay/data->number_of_packets_processed);
 
-  printf("\n");
+  // printf("\n");
 }
 
 long int
@@ -110,6 +110,19 @@ get_no_of_transmitted_arrivals(Simulation_Run_Ptr simulation_run){
   return data->number_of_packets_processed;
 }
 
+long int
+get_no_of_transmitted_bits(Simulation_Run_Ptr simulation_run){
+  Simulation_Run_Data_Ptr data;
+  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  return data->total_bits_processed;
+}
+
+long int
+get_no_of_rejected_bits(Simulation_Run_Ptr simulation_run){
+  Simulation_Run_Data_Ptr data;
+  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  return data->total_bits_rejected;  
+}
 
 
 

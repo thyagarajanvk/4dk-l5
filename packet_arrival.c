@@ -28,6 +28,7 @@
 #include "main.h"
 #include "packet_transmission.h"
 #include "packet_arrival.h"
+#include "trace.h"
 
 /******************************************************************************/
 long int
@@ -92,6 +93,13 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
   new_packet->arrive_time = simulation_run_get_time(simulation_run);
   new_packet->service_time = get_packet_transmission_time();
   new_packet->status = WAITING;
+  
+
+  int urand_index = (int) (uniform_generator()*5);
+  const long int new_packet_bit_lengths[5] = {500, 1000, 1500, 2000, 2500};
+  new_packet->bit_length = new_packet_bit_lengths[urand_index];
+  TRACE(printf("The bitlength of the new packet: %ld \n", new_packet->bit_length););
+  new_packet->equivalent_bit_count = 0;
 
   /* 
    * Start transmission if the data link is free. Otherwise put the packet into
@@ -101,10 +109,14 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
   
   if (data->buffer->size == B){
     data->rejected_count++;
+    data->total_bits_rejected += new_packet->bit_length;
+    TRACE(printf("The packet is rejected, now total_bits_rejected = : %ld \n", data->total_bits_rejected););
   } else {
     if(server_state(data->link) == BUSY) {
       fifoqueue_put(data->buffer, (void*) new_packet);
     } else {
+      // WE ASSUME THAT THE PACKET LENGTH OF ANY PACKET IS STILL <= N, i.e. N >= 2500
+      new_packet->equivalent_bit_count = new_packet->bit_length;
       start_transmission_on_link(simulation_run, new_packet, data->link);
     }
   }
